@@ -3,11 +3,11 @@ module RspecSupport
     module DefineClass
       def define_class(path, base = Object, &block)
         namespace, class_name = *constant_path(path)
-        klass = Class.new(base)
-        namespace.const_set(class_name, klass)
-        klass.class_eval(&block) if block_given?
-        @defined_classes << path
-        klass
+        Class.new(base).tap do |class_inheriting_from_base|
+          namespace.const_set(class_name, class_inheriting_from_base)
+          class_inheriting_from_base.class_eval(&block) if block_given?
+          @defined_classes << path
+        end
       end
 
       def constant_path(constant_name)
@@ -37,7 +37,7 @@ RSpec.configure do |config|
   config.include RspecSupport::Macros::DefineClass
 
   config.before do
-    initialize_defined_classesj
+    initialize_defined_classes
   end
 
   config.after do
