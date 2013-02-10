@@ -7,20 +7,20 @@ A helpful collection of bits and bobs.
 * `define_class`, so you can define per-scenario classes without leaking into
   the global namespace:
 
-    it 'uses a local class' do
-      define_constant(MyClass) do
-        # Everything in this block is class-evaled. The block is optional.
-        def hello
-          "hello"
+        it 'uses a local class' do
+          define_constant(MyClass) do
+            # Everything in this block is class-evaled. The block is optional.
+            def hello
+              "hello"
+            end
+          end
+
+          expect(MyClass.new.hello).to eq "hello"
         end
-      end
 
-      expect(MyClass.new.hello).to eq "hello"
-    end
-
-    it 'is not available everywhere' do
-      expect { MyClass.new }.to raise_error(NameError, /uninitialized constant/)
-    end
+        it 'is not available everywhere' do
+          expect { MyClass.new }.to raise_error(NameError, /uninitialized constant/)
+        end
 
 ## Installation
 
